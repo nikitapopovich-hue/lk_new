@@ -1,0 +1,32 @@
+.kc-view-toggle {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.35), rgba(117, 59, 189, 0.12));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.kc-view-toggle__btn {
+  border: none;
+  border-radius: 11px;
+  min-height: 2rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.55);
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.kc-view-toggle__btn:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.kc-view-toggle__btn--active {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(0, 199, 177, 0.35), rgba(117, 59, 189, 0.45));
+  box-shadow: 0 0 16px rgba(0, 199, 177, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}

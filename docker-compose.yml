@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    ports:
+      - "1121:1121"
+    container_name: kpd_maket
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - kc_uploads:/app/backend/uploads/kc
+
+volumes:
+  kc_uploads:

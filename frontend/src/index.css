@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #020515;
+  color: #e7fffc;
+  font-family: "Montserrat", system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Скролл в стиле PARI (бирюзовый акцент, тёмный трек) */
+.scrollbar-pari {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 199, 177, 0.55) rgba(255, 255, 255, 0.06);
+}
+
+.scrollbar-pari::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-pari::-webkit-scrollbar-track {
+  margin: 4px 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+}
+
+.scrollbar-pari::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(0, 199, 177, 0.75), rgba(0, 199, 177, 0.35));
+  border-radius: 999px;
+  border: 2px solid rgba(6, 11, 38, 0.5);
+}
+
+.scrollbar-pari::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(0, 214, 195, 0.9), rgba(0, 199, 177, 0.5));
+}
+
+/* Бегущая строка новостей на экране оператора */
+@keyframes operator-news-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.operator-news-ticker__track {
+  animation: operator-news-marquee linear infinite;
+}
+
+.operator-news-ticker:hover .operator-news-ticker__track {
+  animation-play-state: paused;
+}
+
+.operator-news-ticker__viewport::before,
+.operator-news-ticker__viewport::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2rem;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.operator-news-ticker__viewport::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(6, 11, 38, 0.95), transparent);
+}
+
+.operator-news-ticker__viewport::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(6, 11, 38, 0.95), transparent);
+}

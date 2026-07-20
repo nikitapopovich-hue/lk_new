@@ -1,0 +1,385 @@
+.grade-info-modal__carousel {
+  position: relative;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.grade-info-modal__track {
+  display: flex;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.grade-info-modal__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  padding: 0 0.15rem;
+}
+
+.grade-info-modal__card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(155deg, rgba(0, 199, 177, 0.12), rgba(117, 59, 189, 0.08) 45%, rgba(6, 11, 38, 0.5));
+  padding: 1.25rem 1.15rem 1.15rem;
+  min-height: 17.5rem;
+}
+
+.grade-info-modal__card--locked {
+  border-color: rgba(255, 255, 255, 0.1);
+  border-style: dashed;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.05), rgba(6, 11, 38, 0.55));
+}
+
+.grade-info-modal__card--passed {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.06), rgba(6, 11, 38, 0.52));
+}
+
+.grade-info-modal__badge--passed {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.grade-info-modal__badge--locked {
+  gap: 0.4rem;
+}
+
+.grade-info-modal__grade-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+
+.grade-info-modal__grade-lock {
+  display: none;
+}
+
+.grade-info-modal__info-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 199, 177, 0.25);
+  background: rgba(0, 199, 177, 0.1);
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.grade-info-modal__info-btn:hover {
+  border-color: rgba(0, 199, 177, 0.45);
+  background: rgba(0, 199, 177, 0.2);
+}
+
+.grade-info-modal__locked-hint {
+  display: none;
+}
+
+.grade-info-modal__benefits--locked .grade-info-modal__benefit,
+.grade-info-modal__benefits--locked .grade-info-modal__benefit-link,
+.grade-info-modal__benefits--locked .grade-info-modal__benefit-mark {
+  color: rgba(255, 255, 255, 0.32) !important;
+}
+
+.grade-info-modal__benefits--passed .grade-info-modal__benefit,
+.grade-info-modal__benefits--passed .grade-info-modal__benefit-link,
+.grade-info-modal__benefits--passed .grade-info-modal__benefit-mark {
+  color: rgba(255, 255, 255, 0.58) !important;
+}
+
+.grade-info-modal__benefit--locked .grade-info-modal__benefit-link {
+  pointer-events: none;
+  text-decoration: none;
+  cursor: default;
+}
+
+.grade-transition-modal__subtitle {
+  margin-top: 0.35rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: rgba(0, 199, 177, 0.9);
+}
+
+.grade-transition-modal__list {
+  margin: 0.65rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grade-transition-modal__section + .grade-transition-modal__section {
+  margin-top: 0.35rem;
+}
+
+.grade-transition-modal__section-title {
+  margin: 1.15rem 0 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.4;
+}
+
+.grade-transition-modal__section:first-of-type .grade-transition-modal__section-title {
+  margin-top: 1.15rem;
+}
+
+.grade-transition-modal__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.grade-transition-modal__mark {
+  flex-shrink: 0;
+  color: #00c7b1;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.grade-transition-modal__item:last-child {
+  border-bottom: none;
+}
+
+.grade-info-modal__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 199, 177, 0.35);
+  background: rgba(0, 199, 177, 0.12);
+  padding: 0.2rem 0.65rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7ee8dc;
+}
+
+.grade-info-modal__badge--next {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.grade-info-modal__grade-num {
+  margin-top: 0;
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #fff 0%, #00c7b1 55%, #753bbd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.grade-info-modal__card--locked .grade-info-modal__grade-num {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.25));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.grade-info-modal__card--passed .grade-info-modal__grade-num {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.38));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.grade-info-modal__benefits-title {
+  margin-top: 1rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.grade-info-modal__benefits {
+  margin: 0.65rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grade-info-modal__benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.4rem 0;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.grade-info-modal__benefit:last-child {
+  border-bottom: none;
+}
+
+.grade-info-modal__benefit-mark {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: #00c7b1;
+  font-size: 0.75rem;
+}
+
+.grade-info-modal__benefit-link {
+  color: #7ee8dc;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.grade-info-modal__benefit-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.grade-info-modal__benefit-label {
+  min-width: 0;
+}
+
+.grade-info-modal__benefit-info-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 199, 177, 0.25);
+  background: rgba(0, 199, 177, 0.1);
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.grade-info-modal__benefit-info-btn:hover {
+  border-color: rgba(0, 199, 177, 0.45);
+  background: rgba(0, 199, 177, 0.2);
+}
+
+.grade-benefit-info-modal__body {
+  margin-top: 1rem;
+}
+
+.grade-benefit-info-modal__heading {
+  margin: 1rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.4;
+}
+
+.grade-benefit-info-modal__body > :first-child.grade-benefit-info-modal__heading {
+  margin-top: 0;
+}
+
+.grade-benefit-info-modal__paragraph {
+  margin: 0.75rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.grade-benefit-info-modal__link {
+  color: #7ee8dc;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.grade-benefit-info-modal__link:hover {
+  color: #00c7b1;
+}
+
+.grade-benefit-info-modal__list {
+  margin: 0.65rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grade-benefit-info-modal__list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.45rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.grade-benefit-info-modal__list-item:last-child {
+  border-bottom: none;
+}
+
+.grade-benefit-info-modal__mark {
+  flex-shrink: 0;
+  color: #00c7b1;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.grade-info-modal__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.grade-info-modal__nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 199, 177, 0.3);
+  background: rgba(0, 199, 177, 0.1);
+  color: #00c7b1;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.grade-info-modal__nav-btn:hover:not(:disabled) {
+  border-color: rgba(0, 199, 177, 0.5);
+  background: rgba(0, 199, 177, 0.2);
+}
+
+.grade-info-modal__nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.grade-info-modal__dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.grade-info-modal__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: transform 0.12s, background 0.12s;
+}
+
+.grade-info-modal__dot--active {
+  background: #00c7b1;
+  transform: scale(1.25);
+}

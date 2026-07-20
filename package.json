@@ -1,0 +1,21 @@
+{
+  "name": "lk-oper-ruk",
+  "private": true,
+  "version": "0.1.0",
+  "description": "ЛК оператора / руководителя PARI",
+  "scripts": {
+    "install:all": "node scripts/install.mjs",
+    "db:up": "docker compose up db -d",
+    "db:down": "docker compose stop db",
+    "db:logs": "docker compose logs -f db",
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "node scripts/run-backend.mjs --reload --port 1121",
+    "dev:web": "npm --prefix frontend run dev",
+    "build": "node scripts/build.mjs",
+    "start": "node scripts/run-backend.mjs --port 1121",
+    "preview": "npm run build && npm run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

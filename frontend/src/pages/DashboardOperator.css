@@ -1,0 +1,276 @@
+/* Дашборд оператора: отступы и раскладка при свёрнутом сайдбаре */
+
+.operator-dashboard__main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.shell-layout--sidebar-collapsed .operator-dashboard__tiles {
+  display: grid;
+  grid-template-columns: minmax(15.5rem, 1fr) 15.5rem 15.5rem;
+  align-items: stretch;
+  justify-content: start;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.shell-layout--sidebar-collapsed .operator-dashboard__tile {
+  width: 100%;
+  max-width: 15.5rem;
+  aspect-ratio: 1;
+}
+
+/* КПД и Мониторинг — та же высота, что у «Привет» */
+.shell-layout--sidebar-collapsed .operator-dashboard__tile--metric {
+  aspect-ratio: auto;
+  align-self: stretch;
+  min-height: 15.5rem;
+}
+
+.shell-layout--sidebar-collapsed .operator-dashboard__tile--metric > * {
+  height: 100%;
+  min-height: 15.5rem;
+}
+
+.shell-layout--sidebar-collapsed .operator-dashboard__tile--welcome {
+  max-width: none;
+  aspect-ratio: auto;
+  align-self: stretch;
+  min-height: 15.5rem;
+}
+
+.shell-layout--sidebar-collapsed .operator-dashboard__tile--welcome > * {
+  height: 100%;
+  min-height: 15.5rem;
+}
+
+.shell-layout--sidebar-collapsed .operator-dashboard__metrics svg {
+  height: min(22rem, 42vh);
+}
+
+/* Текст приветствия: при открытом меню — на всю ширину карточки */
+.operator-welcome-card__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.shell-layout--sidebar-collapsed .operator-welcome-card__text {
+  flex: 0 1 auto;
+  max-width: 42%;
+  padding-right: 0.75rem;
+}
+
+.shell-layout--sidebar-collapsed .operator-dashboard__tile--welcome .magic-bento-card {
+  height: 100%;
+}
+
+.shell-layout--sidebar-collapsed .operator-dashboard__tile--welcome .magic-bento-card > div {
+  display: flex;
+  height: 100%;
+  min-height: 100%;
+  flex-direction: column;
+}
+
+.shell-layout--sidebar-collapsed .operator-welcome-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.shell-layout--sidebar-collapsed .operator-welcome-card__body {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.shell-layout--sidebar-collapsed .operator-dashboard__tile--metric .operator-tile-body {
+  flex: 1;
+}
+
+.shell-layout--sidebar-collapsed .operator-welcome-card {
+  --welcome-card-pad: 1.25rem;
+  --welcome-card-radius: 20px;
+}
+
+@media (min-width: 640px) {
+  .shell-layout--sidebar-collapsed .operator-welcome-card {
+    --welcome-card-pad: 1.5rem;
+  }
+}
+
+/* Фото — только при свёрнутом меню */
+.operator-welcome-card__photo-wrap {
+  display: none;
+  pointer-events: none;
+}
+
+.shell-layout--sidebar-collapsed .operator-welcome-card__photo-wrap--initials {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.shell-layout--sidebar-collapsed .operator-welcome-card__photo-wrap {
+  display: flex;
+  position: absolute;
+  z-index: 0;
+  top: calc(-1 * var(--welcome-card-pad));
+  right: calc(-1 * var(--welcome-card-pad));
+  bottom: calc(-1 * var(--welcome-card-pad));
+  left: 32%;
+  align-items: stretch;
+  justify-content: flex-end;
+  overflow: hidden;
+  border-radius: 0 var(--welcome-card-radius) var(--welcome-card-radius) 0;
+}
+
+.operator-welcome-card__photo-frame--initials {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.35rem;
+}
+
+.operator-welcome-card__photo-frame--initials span {
+  display: flex;
+  width: 7.5rem;
+  height: 7.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 199, 177, 0.35);
+  background: linear-gradient(155deg, rgba(0, 199, 177, 0.35) 0%, rgba(26, 31, 55, 0.95) 100%);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* Вся высота карточки, лицо целиком; слева — маска в фон карточки */
+.shell-layout--sidebar-collapsed .operator-welcome-card__photo {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  min-height: 100%;
+  object-fit: contain;
+  object-position: right center;
+  border-radius: 0;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.06) 10%,
+    rgba(0, 0, 0, 0.32) 24%,
+    rgba(0, 0, 0, 0.7) 40%,
+    #000 54%,
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.06) 10%,
+    rgba(0, 0, 0, 0.32) 24%,
+    rgba(0, 0, 0, 0.7) 40%,
+    #000 54%,
+    #000 100%
+  );
+}
+
+/* Фильтр команды (руководитель) — фирменный select */
+.dashboard-team-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.dashboard-team-filter__select.vj-brand-select {
+  min-width: min(100%, 18rem);
+}
+
+.dashboard-team-filter__select .vj-brand-select__trigger {
+  min-width: min(100%, 18rem);
+  border-radius: 14px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.8125rem;
+}
+
+.vj-brand-select {
+  position: relative;
+  min-width: 11rem;
+}
+
+.vj-brand-select__trigger {
+  display: flex;
+  width: 100%;
+  min-width: 11rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.82rem;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.vj-brand-select__trigger:hover:not(:disabled) {
+  border-color: rgba(0, 199, 177, 0.35);
+}
+
+.vj-brand-select__trigger:focus-visible {
+  outline: none;
+  border-color: rgba(0, 199, 177, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 199, 177, 0.15);
+}
+
+.vj-brand-select__trigger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.vj-brand-select__chevron {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid rgba(0, 199, 177, 0.9);
+}
+
+.vj-brand-select__menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 16rem;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 199, 177, 0.25);
+  background: linear-gradient(165deg, rgba(12, 18, 48, 0.98), rgba(22, 28, 52, 0.98));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.vj-brand-select__option {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.85);
+  background: transparent;
+  cursor: pointer;
+}
+
+.vj-brand-select__option:hover,
+.vj-brand-select__option--active {
+  background: rgba(0, 199, 177, 0.15);
+  color: #fff;
+}

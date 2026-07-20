@@ -1,0 +1,206 @@
+.kc-career-map {
+  margin-top: 0.25rem;
+}
+
+.kc-career-map__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.kc-career-map__title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.kc-career-map__empty {
+  border-radius: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1.25rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.kc-career-timeline {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.kc-career-timeline::before {
+  content: "";
+  position: absolute;
+  left: 0.4rem;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  width: 2px;
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(117, 59, 189, 0.65) 45%,
+    rgba(0, 199, 177, 0.85) 100%
+  );
+  border-radius: 2px;
+}
+
+.kc-career-step {
+  position: relative;
+  padding-bottom: 1.1rem;
+}
+
+.kc-career-step:last-child {
+  padding-bottom: 0;
+}
+
+.kc-career-step__dot {
+  position: absolute;
+  left: -1.5rem;
+  top: 0.2rem;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00c7b1, #753bbd);
+  box-shadow: 0 0 0 3px rgba(0, 199, 177, 0.2), 0 0 12px rgba(0, 199, 177, 0.35);
+}
+
+.kc-career-step__card {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(0, 199, 177, 0.08), rgba(117, 59, 189, 0.06));
+  padding: 0.75rem 0.9rem;
+}
+
+.kc-career-step__date {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(0, 199, 177, 0.95);
+  letter-spacing: 0.02em;
+}
+
+.kc-career-step__title {
+  margin-top: 0.25rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.35;
+}
+
+.kc-career-step__dept {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.kc-career-step__note {
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.4;
+}
+
+.kc-career-edit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.kc-career-edit-card {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.28);
+  padding: 0.85rem;
+}
+
+.kc-career-edit-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.kc-career-edit-card__index {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(0, 199, 177, 0.85);
+}
+
+.kc-career-edit-card--dragging {
+  opacity: 0.55;
+  border-color: rgba(0, 199, 177, 0.35);
+}
+
+.kc-career-drag-handle {
+  cursor: grab;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  padding: 0.2rem 0.45rem;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.kc-career-drag-handle:active {
+  cursor: grabbing;
+}
+
+.kc-career-edit-card__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+}
+
+.kc-career-edit-card__preview {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.kc-career-edit-card__chevron {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.kc-career-edit-grid {
+  display: grid;
+  gap: 0.55rem;
+}
+
+@media (min-width: 480px) {
+  .kc-career-edit-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .kc-career-edit-grid .kc-career-span-2 {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 900px) {
+  .kc-career-edit-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .kc-career-edit-grid .kc-career-span-2 {
+    grid-column: span 3;
+  }
+}

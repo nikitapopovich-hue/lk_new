@@ -1,0 +1,16 @@
+.env
+.git
+.idea
+.vscode
+**/__pycache__
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+backend/.venv
+frontend/node_modules
+frontend/dist
+backend/uploads
+Атрибуты
+*.md
+!README.md
+agent-transcripts

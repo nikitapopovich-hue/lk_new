@@ -1,0 +1,140 @@
+.kc-chroma-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.75rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.25rem;
+}
+
+.kc-chroma-card-wrap {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  cursor: pointer;
+  position: relative;
+}
+
+.kc-chroma-card-wrap--selected .magic-bento-card {
+  outline: 2px solid rgba(0, 199, 177, 0.55);
+  outline-offset: 2px;
+}
+
+.kc-chroma-card-wrap--inactive .kc-chroma-img-wrapper img {
+  filter: grayscale(1);
+  opacity: 0.72;
+}
+
+.kc-chroma-card-wrap--inactive .kc-chroma-no-photo {
+  opacity: 0.72;
+}
+
+.kc-chroma-select {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+
+.kc-chroma-select input {
+  accent-color: #00c7b1;
+  cursor: pointer;
+}
+
+.kc-chroma-card-wrap .magic-bento-card {
+  width: 100%;
+  min-height: 0;
+}
+
+.kc-chroma-card-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.kc-chroma-img-wrapper {
+  padding: 10px 10px 0;
+}
+
+.kc-chroma-img-wrapper img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+  filter: none;
+  opacity: 1;
+}
+
+.kc-chroma-no-photo {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.kc-chroma-avatar-fallback {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, rgba(0, 199, 177, 0.45), rgba(117, 59, 189, 0.5));
+}
+
+.kc-chroma-info {
+  padding: 0.75rem 1rem 1rem;
+  color: #fff;
+  display: grid;
+  row-gap: 0.2rem;
+}
+
+.kc-chroma-info .kc-chroma-title {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.kc-chroma-status {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.kc-chroma-info .kc-chroma-meta {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.kc-chroma-info .kc-chroma-meta--sub {
+  color: rgba(155, 111, 212, 0.85);
+  font-size: 0.75rem;
+}
+
