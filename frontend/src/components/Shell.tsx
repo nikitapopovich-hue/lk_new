@@ -22,7 +22,8 @@ type NavRouteItem = { kind: "route"; to: string; label: string };
 type NavExternalItem = { kind: "external"; href: string; label: string };
 type NavKcGroupItem = { kind: "kc-group" };
 type NavStatsGroupItem = { kind: "stats-group" };
-type NavItem = NavRouteItem | NavExternalItem | NavKcGroupItem | NavStatsGroupItem;
+type NavTriggersGroupItem = { kind: "triggers-group" };
+type NavItem = NavRouteItem | NavExternalItem | NavKcGroupItem | NavStatsGroupItem | NavTriggersGroupItem;
 
 const scheduleKcNavItem: NavExternalItem = {
   kind: "external",
@@ -50,6 +51,11 @@ const channelMonitoringNavItem: NavExternalItem = {
 
 const kcNavGroupItem: NavKcGroupItem = { kind: "kc-group" };
 const statsNavGroupItem: NavStatsGroupItem = { kind: "stats-group" };
+const triggersNavGroupItem: NavTriggersGroupItem = { kind: "triggers-group" };
+
+function isTriggersPath(pathname: string): boolean {
+  return pathname.startsWith("/triggers");
+}
 
 function ChevronLeftIcon() {
   return (
@@ -99,6 +105,56 @@ function isStatsPath(pathname: string): boolean {
     pathname.startsWith("/overtime") ||
     pathname.startsWith("/bonuses") ||
     pathname.startsWith("/recalculations")
+  );
+}
+
+function TriggersNavGroup(props: { open: boolean; onToggle: () => void }) {
+  const location = useLocation();
+  const onTriggers = isTriggersPath(location.pathname);
+
+  return (
+    <div className={`shell-stats-nav ${onTriggers ? "shell-stats-nav--active" : ""}`}>
+      <button
+        type="button"
+        className="shell-stats-nav__header"
+        aria-expanded={props.open}
+        onClick={props.onToggle}
+      >
+        <span className="shell-stats-nav__icon">
+          <StatsIcon />
+        </span>
+        <span className="shell-stats-nav__titles">
+          <span className="shell-stats-nav__eyebrow">Раздел</span>
+          <span className="shell-stats-nav__title">Триггеры</span>
+        </span>
+        <span className="shell-stats-nav__chevron" aria-hidden>
+          {props.open ? "▲" : "▼"}
+        </span>
+      </button>
+      {props.open ? (
+        <div className="shell-stats-nav__body">
+          <div className="shell-stats-nav__links">
+            <NavLink
+              to="/triggers"
+              end
+              className={({ isActive }) =>
+                `shell-stats-nav__link ${isActive ? "shell-stats-nav__link--active" : ""}`
+              }
+            >
+              Обзор команды
+            </NavLink>
+            <NavLink
+              to="/triggers/ra"
+              className={({ isActive }) =>
+                `shell-stats-nav__link ${isActive ? "shell-stats-nav__link--active" : ""}`
+              }
+            >
+              Тригеры РА
+            </NavLink>
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -227,6 +283,7 @@ export function AppShell(props: { children: ReactNode }) {
   const structureMode = location.pathname === "/kc-data/structure";
   const [kcMenuOpen, setKcMenuOpen] = useState(() => location.pathname.startsWith("/kc-data"));
   const [statsMenuOpen, setStatsMenuOpen] = useState(() => isStatsPath(location.pathname));
+  const [triggersMenuOpen, setTriggersMenuOpen] = useState(() => isTriggersPath(location.pathname));
   const [sidebarCollapsed, setSidebarCollapsed] = useState(readSidebarCollapsed);
 
   const toggleSidebar = useCallback(() => {
@@ -244,11 +301,14 @@ export function AppShell(props: { children: ReactNode }) {
     if (isStatsPath(location.pathname)) {
       setStatsMenuOpen(true);
     }
+    if (isTriggersPath(location.pathname)) {
+      setTriggersMenuOpen(true);
+    }
   }, [location.pathname, structureMode]);
 
   const supervisorNav: NavItem[] = [
     { kind: "route", to: "/", label: "Дашборд" },
-    { kind: "route", to: "/triggers", label: "Триггеры" },
+    triggersNavGroupItem,
     { kind: "route", to: "/remote-work", label: "Удалённая работа" },
     { kind: "route", to: "/teams", label: "Команды" },
     statsNavGroupItem,
@@ -276,7 +336,7 @@ export function AppShell(props: { children: ReactNode }) {
         ? supervisorNav
         : [
             { kind: "route", to: "/", label: "Дашборд" },
-            { kind: "route", to: "/triggers", label: "Триггеры" },
+            triggersNavGroupItem,
             { kind: "route", to: "/remote-work", label: "Удалённая работа" },
             { kind: "route", to: "/teams", label: "Команды" },
             { kind: "route", to: "/mappings", label: "Маппинг сотрудников" },
@@ -289,6 +349,16 @@ export function AppShell(props: { children: ReactNode }) {
             kcNavGroupItem,
             { kind: "route", to: "/profile", label: "Профиль" },
           ];
+
+  function handleTriggersToggle() {
+    setTriggersMenuOpen((open) => {
+      const next = !open;
+      if (next && !isTriggersPath(location.pathname)) {
+        navigate("/triggers");
+      }
+      return next;
+    });
+  }
 
   function handleStatsToggle() {
     setStatsMenuOpen((open) => {
@@ -364,6 +434,15 @@ export function AppShell(props: { children: ReactNode }) {
                       key="stats-group"
                       open={statsMenuOpen}
                       onToggle={handleStatsToggle}
+                    />
+                  );
+                }
+                if (i.kind === "triggers-group") {
+                  return (
+                    <TriggersNavGroup
+                      key="triggers-group"
+                      open={triggersMenuOpen}
+                      onToggle={handleTriggersToggle}
                     />
                   );
                 }

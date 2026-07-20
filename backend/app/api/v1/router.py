@@ -22,6 +22,7 @@ from app.api.v1.routes import (
     profile,
     team,
     teams,
+    triggers_ra,
     uis,
     violation_journal,
 )
@@ -48,4 +49,5 @@ api_router.include_router(teams.router, prefix="/teams", tags=["teams"])
 api_router.include_router(mappings.router, prefix="/mappings", tags=["mappings"])
 api_router.include_router(auto_mapping.router, prefix="/mappings/auto", tags=["mappings-auto"])
 api_router.include_router(uis.router, prefix="/uis", tags=["uis"])
+api_router.include_router(triggers_ra.router, prefix="/triggers-ra", tags=["triggers-ra"])
 

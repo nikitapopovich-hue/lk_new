@@ -26,11 +26,12 @@ console.log("→ pip install -r requirements.txt");
 run(venvPython, ["-m", "pip", "install", "-r", "requirements.txt"], root);
 
 console.log("→ проверка python-multipart");
-const check = spawnSync(venvPython, ["-c", "import multipart; from app.main import app"], {
-  cwd: backend,
-  stdio: "inherit",
-  shell: isWin,
-});
+// Без shell: на Windows cmd ломает `-c "import multipart; ..."` (обрезает после import).
+const check = spawnSync(
+  venvPython,
+  ["-c", "import multipart; from app.main import app"],
+  { cwd: backend, stdio: "inherit", shell: false },
+);
 if (check.status !== 0) {
   console.error("\nОшибка: backend-зависимости не установились. Запустите вручную:");
   console.error("  backend\\.venv\\Scripts\\pip install -r requirements.txt");

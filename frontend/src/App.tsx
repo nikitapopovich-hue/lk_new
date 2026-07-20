@@ -11,6 +11,8 @@ import { AccountsPage } from "./pages/Accounts";
 import { ProfilePage } from "./pages/Profile";
 import { FinancePage } from "./pages/Finance";
 import { TriggersPage } from "./pages/Triggers";
+import { TriggersLayout } from "./pages/triggers/TriggersLayout";
+import { TriggersRaPage } from "./pages/triggers/TriggersRaPage";
 import { RemoteWorkPage } from "./pages/RemoteWork";
 import { KcDataPage } from "./pages/KcData";
 import { KcStructurePage } from "./pages/KcStructure";
@@ -61,7 +63,10 @@ function App() {
         <Route path="/kc-data/structure" element={<KcStructurePage />} />
       {role === "supervisor" || role === "superadmin" ? (
         <>
-          <Route path="/triggers" element={<TriggersPage />} />
+          <Route path="/triggers" element={<TriggersLayout />}>
+            <Route index element={<TriggersPage />} />
+            <Route path="ra" element={<TriggersRaPage />} />
+          </Route>
           <Route path="/remote-work" element={<RemoteWorkPage />} />
           <Route path="/teams" element={<TeamsPage />} />
           <Route path="/kpd" element={<KpdLayout />}>

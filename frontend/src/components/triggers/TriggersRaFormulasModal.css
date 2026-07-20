@@ -1,0 +1,310 @@
+.tra-formulas-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0, 199, 177, 0.14), transparent 55%),
+    rgba(2, 5, 21, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.tra-formulas-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(720px, 96vw);
+  max-height: min(88vh, 860px);
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(155deg, rgba(6, 11, 38, 0.98) 0%, rgba(26, 31, 55, 0.97) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 28px 80px rgba(0, 0, 0, 0.5);
+}
+
+.tra-formulas-dialog__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem 0.95rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.tra-formulas-dialog__eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 199, 177, 0.85);
+}
+
+.tra-formulas-dialog__title {
+  margin: 0.2rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.tra-formulas-dialog__close {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.tra-formulas-dialog__close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.tra-formulas-dialog__body {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem 1.25rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.tra-formulas-section__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.tra-formulas-section__lead {
+  margin: 0.35rem 0 0.75rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tra-formulas-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+}
+
+@media (min-width: 640px) {
+  .tra-formulas-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.tra-formulas-card {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.75rem 0.85rem;
+}
+
+.tra-formulas-card__title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(147, 197, 253, 0.95);
+}
+
+.tra-formulas-card__text {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.tra-formulas-legend {
+  display: grid;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .tra-formulas-legend {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.tra-formulas-legend__item {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.7rem 0.8rem;
+}
+
+.tra-formulas-legend__item strong {
+  display: block;
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.tra-formulas-legend__item p {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tra-formulas-legend__symbol {
+  flex-shrink: 0;
+  min-width: 2.2rem;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tra-formulas-legend__item--bad .tra-formulas-legend__symbol {
+  color: #fb7185;
+}
+
+.tra-formulas-legend__item--good .tra-formulas-legend__symbol {
+  color: #34d399;
+}
+
+.tra-formulas-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.tra-formulas-table-wrap {
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.tra-formulas-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.tra-formulas-table th,
+.tra-formulas-table td {
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tra-formulas-table th {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tra-formulas-table td {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.tra-formulas-table tr:last-child td {
+  border-bottom: none;
+}
+
+.tra-formulas-table__num {
+  width: 4.5rem;
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: rgba(0, 199, 177, 0.95) !important;
+}
+
+.tra-formulas-callout {
+  margin-top: 0.75rem;
+  border-radius: 14px;
+  border: 1px solid rgba(251, 113, 133, 0.28);
+  background: rgba(251, 113, 133, 0.08);
+  padding: 0.75rem 0.9rem;
+}
+
+.tra-formulas-callout strong {
+  display: block;
+  font-size: 0.8rem;
+  color: #fda4af;
+}
+
+.tra-formulas-callout p {
+  margin: 0.3rem 0 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.tra-formulas-callout span {
+  color: #fff;
+  font-weight: 600;
+}
+
+.tra-formulas-thresholds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.tra-formulas-thresholds li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  align-items: baseline;
+  justify-content: space-between;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.65rem 0.85rem;
+}
+
+.tra-formulas-thresholds__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(147, 197, 253, 0.9);
+}
+
+.tra-formulas-thresholds__value {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: right;
+}
+
+.tra-formulas-dialog__foot {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.85rem 1.25rem 1.1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.tra-formulas-dialog__ok {
+  border: none;
+  border-radius: 12px;
+  background: #00a894;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.55rem 1.15rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.tra-formulas-dialog__ok:hover {
+  background: #00c7b1;
+}
