@@ -3,6 +3,7 @@ import { MagicSurface } from "../../components/MagicBento";
 import { operatorSurface } from "../../components/operator/operatorTile";
 import { TriggersRaFormulasModal } from "../../components/triggers/TriggersRaFormulasModal";
 import {
+  downloadTriggersRaXlsx,
   fetchTriggersRaDashboard,
   type ChartSection,
   type OperatorRow,
@@ -245,6 +246,7 @@ export function TriggersRaPage() {
   const [error, setError] = useState("");
   const [data, setData] = useState<TriggersRaDashboard | null>(null);
   const [showFormulas, setShowFormulas] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -259,6 +261,25 @@ export function TriggersRaPage() {
       setLoading(false);
     }
   }, [periodDays]);
+
+  const downloadExcel = useCallback(async () => {
+    if (!data) return;
+    setExporting(true);
+    setError("");
+    try {
+      const blob = await downloadTriggersRaXlsx(data);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `trigery-ra-${data.periodDays}d.xlsx`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setExporting(false);
+    }
+  }, [data]);
 
   const tabs: Array<{ id: TabId; label: string }> = [
     { id: "operators", label: "СП + VIP · Операторы" },
@@ -296,6 +317,15 @@ export function TriggersRaPage() {
             className="rounded-xl bg-pari-600 px-4 py-2 text-sm font-medium text-white hover:bg-pari-500 disabled:opacity-50"
           >
             {loading ? "Загрузка…" : "Обновить данные"}
+          </button>
+          <button
+            type="button"
+            onClick={() => void downloadExcel()}
+            disabled={!data || exporting}
+            className="rounded-xl border border-white/10 px-3 py-2 text-sm text-white/80 hover:bg-white/[0.05] disabled:cursor-not-allowed disabled:opacity-40"
+            title={data ? "Скачать Excel-отчёт" : "Сначала загрузите данные"}
+          >
+            {exporting ? "Формирование…" : "Скачать Excel"}
           </button>
           <button
             type="button"

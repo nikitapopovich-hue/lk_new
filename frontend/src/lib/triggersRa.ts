@@ -112,3 +112,19 @@ export async function fetchTriggersRaDashboard(periodDays: number): Promise<Trig
   }
   return resp.json();
 }
+
+export async function downloadTriggersRaXlsx(data: TriggersRaDashboard): Promise<Blob> {
+  const resp = await fetch(`${getApiBase()}/triggers-ra/export.xlsx`, {
+    method: "POST",
+    headers: {
+      ...authHeaders(),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  if (!resp.ok) {
+    const text = await resp.text().catch(() => "");
+    throw new Error(text.slice(0, 400) || `API ${resp.status}`);
+  }
+  return resp.blob();
+}
