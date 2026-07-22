@@ -31,4 +31,4 @@ RUN mkdir -p /app/backend/uploads/kc
 WORKDIR /app/backend
 EXPOSE 1121
 
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "1121"]
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "1121", "--workers", "4"]

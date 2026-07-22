@@ -239,8 +239,24 @@ function TmBlock(props: { sections: TmSection[] }) {
   );
 }
 
+function isoDate(d: Date) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function defaultCustomRange() {
+  const to = new Date();
+  const from = new Date();
+  from.setDate(from.getDate() - 13);
+  return { from: isoDate(from), to: isoDate(to) };
+}
+
 export function TriggersRaPage() {
+  const [periodMode, setPeriodMode] = useState<"preset" | "custom">("preset");
   const [periodDays, setPeriodDays] = useState(14);
+  const [customRange, setCustomRange] = useState(defaultCustomRange);
   const [tab, setTab] = useState<TabId>("operators");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -248,19 +264,42 @@ export function TriggersRaPage() {
   const [showFormulas, setShowFormulas] = useState(false);
   const [exporting, setExporting] = useState(false);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const dash = await fetchTriggersRaDashboard(periodDays);
-      setData(dash);
-    } catch (e: unknown) {
-      setData(null);
-      setError(e instanceof Error ? e.message : String(e));
-    } finally {
-      setLoading(false);
-    }
-  }, [periodDays]);
+  const load = useCallback(
+    async (force = true) => {
+      setLoading(true);
+      setError("");
+      try {
+        if (periodMode === "custom") {
+          if (!customRange.from || !customRange.to) {
+            throw new Error("Укажите даты начала и конца интервала");
+          }
+          if (customRange.to < customRange.from) {
+            throw new Error("Дата окончания не может быть раньше даты начала");
+          }
+          const dash = await fetchTriggersRaDashboard({
+            mode: "custom",
+            dateFrom: customRange.from,
+            dateTo: customRange.to,
+            force,
+          });
+          setData(dash);
+        } else {
+          const dash = await fetchTriggersRaDashboard({
+            mode: "preset",
+            periodDays,
+            force,
+          });
+          setData(dash);
+        }
+      } catch (e: unknown) {
+        setData(null);
+        setError(e instanceof Error ? e.message : String(e));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [periodMode, periodDays, customRange],
+  );
 
   const downloadExcel = useCallback(async () => {
     if (!data) return;
@@ -271,7 +310,10 @@ export function TriggersRaPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `trigery-ra-${data.periodDays}d.xlsx`;
+      const from = data.dateFrom;
+      const to = data.dateTo;
+      a.download =
+        from && to ? `trigery-ra-${from}_${to}.xlsx` : `trigery-ra-${data.periodDays}d.xlsx`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (e: unknown) {
@@ -288,6 +330,11 @@ export function TriggersRaPage() {
     { id: "charts", label: "Графики 30 дней" },
   ];
 
+  const periodLabel =
+    data?.dateFrom && data?.dateTo
+      ? `${data.dateFrom} — ${data.dateTo} (${data.periodDays} дн.)`
+      : `${data?.periodDays ?? periodDays} дн.`;
+
   return (
     <div className="space-y-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -299,24 +346,68 @@ export function TriggersRaPage() {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <label className="text-xs text-white/50">
-            Период
+            Режим
             <select
               className="ml-2 rounded-lg border border-white/10 bg-[#0b1228] px-2 py-1.5 text-sm text-white"
-              value={periodDays}
-              onChange={(e) => setPeriodDays(Number(e.target.value))}
+              value={periodMode}
+              onChange={(e) => setPeriodMode(e.target.value as "preset" | "custom")}
             >
-              <option value={7}>7 дней</option>
-              <option value={14}>14 дней</option>
-              <option value={30}>30 дней</option>
+              <option value="preset">Пресет</option>
+              <option value="custom">Свои даты</option>
             </select>
           </label>
+          {periodMode === "preset" ? (
+            <label className="text-xs text-white/50">
+              Период
+              <select
+                className="ml-2 rounded-lg border border-white/10 bg-[#0b1228] px-2 py-1.5 text-sm text-white"
+                value={periodDays}
+                onChange={(e) => setPeriodDays(Number(e.target.value))}
+              >
+                <option value={7}>7 дней</option>
+                <option value={14}>14 дней</option>
+                <option value={30}>30 дней</option>
+              </select>
+            </label>
+          ) : (
+            <>
+              <label className="text-xs text-white/50">
+                С
+                <input
+                  type="date"
+                  className="ml-2 rounded-lg border border-white/10 bg-[#0b1228] px-2 py-1.5 text-sm text-white"
+                  value={customRange.from}
+                  onChange={(e) => setCustomRange((r) => ({ ...r, from: e.target.value }))}
+                />
+              </label>
+              <label className="text-xs text-white/50">
+                По
+                <input
+                  type="date"
+                  className="ml-2 rounded-lg border border-white/10 bg-[#0b1228] px-2 py-1.5 text-sm text-white"
+                  value={customRange.to}
+                  onChange={(e) => setCustomRange((r) => ({ ...r, to: e.target.value }))}
+                />
+              </label>
+            </>
+          )}
           <button
             type="button"
-            onClick={() => void load()}
+            onClick={() => void load(false)}
             disabled={loading}
             className="rounded-xl bg-pari-600 px-4 py-2 text-sm font-medium text-white hover:bg-pari-500 disabled:opacity-50"
+            title="Загрузить данные (кэш до 3 мин)"
           >
             {loading ? "Загрузка…" : "Обновить данные"}
+          </button>
+          <button
+            type="button"
+            onClick={() => void load(true)}
+            disabled={loading}
+            className="rounded-xl border border-white/10 px-3 py-2 text-sm text-white/70 hover:bg-white/[0.05] disabled:opacity-50"
+            title="Игнорировать кэш и запросить TouchPoint заново"
+          >
+            Без кэша
           </button>
           <button
             type="button"
@@ -376,10 +467,11 @@ export function TriggersRaPage() {
             <div className="space-y-4">
               <MagicSurface className={panel}>
                 <div className="mb-3">
-                  <h2 className="text-lg font-semibold text-white">Рейтинг операторов · {data.periodDays} дн.</h2>
+                  <h2 className="text-lg font-semibold text-white">Рейтинг операторов · {periodLabel}</h2>
                   <p className="mt-1 text-xs text-white/45">
-                    Сравнение с предыдущими {data.periodDays} дн. Подсветка: балл ≥ 51 или ≥ 2 срабатываний.
-                    Порог включения: ≥ {data.minCalls} обращений.
+                    Сравнение с предыдущими {data.periodDays} дн. той же длины. Подсветка: балл ≥ 51 или ≥ 2
+                    срабатываний. Порог включения: ≥ {data.minCalls} обращений.
+                    {data.fromCache ? " Данные из кэша (до 3 мин)." : ""}
                   </p>
                 </div>
                 {data.operators.length ? (

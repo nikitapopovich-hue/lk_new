@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+import logging
+import threading
+import time
+from datetime import date, datetime, timedelta, timezone
 from typing import Any
 
 from app.core.config import Settings
@@ -37,8 +40,19 @@ from app.domain.triggers_ra.ui_helpers import (
     humanize_triggers,
 )
 
+logger = logging.getLogger(__name__)
+
+# TouchPoint: слишком короткий timeout режет длинные агрегации; 120 с держит воркер слишком долго.
+TOUCHPOINT_TIMEOUT_SECONDS = 40.0
+DASHBOARD_CACHE_TTL_SECONDS = 180.0
+
+_dashboard_cache: dict[str, tuple[float, dict[str, Any]]] = {}
+_dashboard_cache_lock = threading.Lock()
+
 
 def build_touchpoint_client(settings: Settings) -> TouchPointClient:
+    configured = float(settings.itech_timeout_seconds or TOUCHPOINT_TIMEOUT_SECONDS)
+    timeout = max(TOUCHPOINT_TIMEOUT_SECONDS, min(configured, 60.0))
     return TouchPointClient(
         api_base_url=str(settings.itech_resource_base_url),
         auth_url=str(settings.itech_oauth_token_url),
@@ -48,7 +62,7 @@ def build_touchpoint_client(settings: Settings) -> TouchPointClient:
         password=settings.itech_oauth_password,
         access_token=settings.itech_access_token,
         grant_type=settings.itech_oauth_grant_type or "password",
-        timeout_seconds=max(120.0, float(settings.itech_timeout_seconds)),
+        timeout_seconds=timeout,
     )
 
 
@@ -60,6 +74,75 @@ def touchpoint_configured(settings: Settings) -> bool:
     if settings.itech_oauth_client_id and settings.itech_oauth_client_secret:
         return True
     return False
+
+
+def _as_utc_start(d: date) -> datetime:
+    return datetime(d.year, d.month, d.day, tzinfo=timezone.utc)
+
+
+def _as_utc_end_exclusive_as_inclusive(d: date) -> datetime:
+    """Конец дня включительно для фильтров gte/lte по дате."""
+    return datetime(d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc)
+
+
+def resolve_period(
+    *,
+    period_days: int | None = None,
+    date_from: date | None = None,
+    date_to: date | None = None,
+) -> tuple[datetime, datetime, datetime, datetime, int, datetime, datetime]:
+    """Возвращает cur_start/end, base_start/end, period_days, chart_start/end."""
+    now = datetime.now(timezone.utc)
+
+    if date_from is not None and date_to is not None:
+        if date_to < date_from:
+            raise ValueError("date_to должен быть не раньше date_from")
+        # Включительно: 01.03–31.03 = 31 день
+        days = (date_to - date_from).days + 1
+        if days < 1:
+            days = 1
+        if days > 90:
+            raise ValueError("Интервал не может быть больше 90 дней")
+        cur_start = _as_utc_start(date_from)
+        cur_end = _as_utc_end_exclusive_as_inclusive(date_to)
+        base_end = cur_start
+        base_start = cur_start - timedelta(days=days)
+        period_days = days
+    else:
+        days = period_days or DEFAULT_PERIOD_DAYS
+        days = max(1, min(int(days), 90))
+        cur_start, cur_end = period_bounds(days, end=now)
+        base_start = cur_start - timedelta(days=days)
+        base_end = cur_start
+        period_days = days
+
+    chart_end = cur_end
+    chart_start = chart_end - timedelta(days=CHART_PERIOD_DAYS)
+    return cur_start, cur_end, base_start, base_end, period_days, chart_start, chart_end
+
+
+def _cache_key(period_days: int, date_from: date | None, date_to: date | None) -> str:
+    if date_from and date_to:
+        return f"custom:{date_from.isoformat()}:{date_to.isoformat()}"
+    return f"days:{period_days}"
+
+
+def get_cached_dashboard(key: str) -> dict[str, Any] | None:
+    now = time.monotonic()
+    with _dashboard_cache_lock:
+        entry = _dashboard_cache.get(key)
+        if not entry:
+            return None
+        ts, payload = entry
+        if now - ts > DASHBOARD_CACHE_TTL_SECONDS:
+            _dashboard_cache.pop(key, None)
+            return None
+        return payload
+
+
+def put_cached_dashboard(key: str, payload: dict[str, Any]) -> None:
+    with _dashboard_cache_lock:
+        _dashboard_cache[key] = (time.monotonic(), payload)
 
 
 def _metric_snapshot(m: OperatorMetrics) -> dict[str, Any]:
@@ -180,12 +263,18 @@ def serialize_tm_row(row: TMOperatorRow, burnout: dict | None) -> dict[str, Any]
     }
 
 
-def load_dashboard(client: TouchPointClient, period_days: int) -> dict[str, Any]:
-    end = datetime.now(timezone.utc)
-    cur_start, cur_end = period_bounds(period_days, end=end)
-    base_start = cur_start - timedelta(days=period_days)
-    base_end = cur_start
-    chart_start, chart_end = period_bounds(CHART_PERIOD_DAYS, end=end)
+def load_dashboard(
+    client: TouchPointClient,
+    *,
+    period_days: int = DEFAULT_PERIOD_DAYS,
+    date_from: date | None = None,
+    date_to: date | None = None,
+) -> dict[str, Any]:
+    cur_start, cur_end, base_start, base_end, period_days, chart_start, chart_end = resolve_period(
+        period_days=period_days,
+        date_from=date_from,
+        date_to=date_to,
+    )
 
     sp_vip = sp_vip_projects()
     tm = tm_projects()
@@ -275,6 +364,8 @@ def load_dashboard(client: TouchPointClient, period_days: int) -> dict[str, Any]
         "periodDays": period_days,
         "defaultPeriodDays": DEFAULT_PERIOD_DAYS,
         "minCalls": MIN_CALLS_PER_OPERATOR,
+        "dateFrom": cur_start.date().isoformat(),
+        "dateTo": cur_end.date().isoformat(),
         "period": {
             "start": cur_start.isoformat(),
             "end": cur_end.isoformat(),
@@ -288,3 +379,32 @@ def load_dashboard(client: TouchPointClient, period_days: int) -> dict[str, Any]
         "charts": charts,
         "formulasMarkdown": FORMULAS_MARKDOWN.strip(),
     }
+
+
+def load_dashboard_cached(
+    client: TouchPointClient,
+    *,
+    period_days: int = DEFAULT_PERIOD_DAYS,
+    date_from: date | None = None,
+    date_to: date | None = None,
+    force: bool = False,
+) -> dict[str, Any]:
+    key = _cache_key(period_days, date_from, date_to)
+    if not force:
+        cached = get_cached_dashboard(key)
+        if cached is not None:
+            logger.info("triggers_ra dashboard cache hit key=%s", key)
+            out = dict(cached)
+            out["fromCache"] = True
+            return out
+
+    data = load_dashboard(
+        client,
+        period_days=period_days,
+        date_from=date_from,
+        date_to=date_to,
+    )
+    put_cached_dashboard(key, data)
+    out = dict(data)
+    out["fromCache"] = False
+    return out

@@ -143,6 +143,7 @@ export function TriggersRaFormulasModal(props: Props) {
             </div>
             <p className="tra-formulas-note">
               Для оценки ОКК, эмпатии и вовлечённости логика обратная: рост — зелёный, падение — красный.
+              Для «В мониторинге» рост доли — красный (сигнал риска), снижение — зелёный.
             </p>
           </section>
 

@@ -100,9 +100,11 @@ def _sheet_operators(wb: Workbook, data: dict[str, Any]) -> None:
     ws.title = "Операторы СП+VIP"
     period_days = data.get("periodDays") or ""
     period = data.get("period") or {}
+    date_from = data.get("dateFrom") or str(period.get("start", ""))[:10]
+    date_to = data.get("dateTo") or str(period.get("end", ""))[:10]
     subtitle = (
         f"Период: {period_days} дн. · "
-        f"{str(period.get('start', ''))[:10]} — {str(period.get('end', ''))[:10]} · "
+        f"{date_from} — {date_to} · "
         f"сформировано {datetime.now().strftime('%d.%m.%Y %H:%M')}"
     )
     row = _write_title(ws, 1, "Тригеры РА — рейтинг операторов (СП + VIP)", subtitle)

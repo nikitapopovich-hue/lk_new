@@ -1,4 +1,5 @@
 import { authHeaders, getApiBase } from "./auth";
+import { fetchWithTimeout } from "./http";
 
 export type TrendCell = { text: string; sentiment: "good" | "bad" | "neutral" | string };
 
@@ -82,6 +83,9 @@ export type ChartSection = {
 export type TriggersRaDashboard = {
   periodDays: number;
   minCalls: number;
+  dateFrom?: string;
+  dateTo?: string;
+  fromCache?: boolean;
   period: { start: string; end: string; chartStart: string; chartEnd: string };
   operators: OperatorRow[];
   atRisk: OperatorRow[];
@@ -91,20 +95,38 @@ export type TriggersRaDashboard = {
   formulasMarkdown: string;
 };
 
+export type TriggersRaPeriodQuery =
+  | { mode: "preset"; periodDays: number; force?: boolean }
+  | { mode: "custom"; dateFrom: string; dateTo: string; force?: boolean };
+
+const DASHBOARD_TIMEOUT_MS = 180_000;
+
 export async function fetchTriggersRaConfig(): Promise<{
   configured: boolean;
   defaultPeriodDays: number;
   periodOptions: number[];
+  maxCustomDays?: number;
+  cacheTtlSeconds?: number;
 }> {
-  const resp = await fetch(`${getApiBase()}/triggers-ra/config`, { headers: authHeaders() });
+  const resp = await fetchWithTimeout(`${getApiBase()}/triggers-ra/config`, { headers: authHeaders() }, 15_000);
   if (!resp.ok) throw new Error(`API ${resp.status}`);
   return resp.json();
 }
 
-export async function fetchTriggersRaDashboard(periodDays: number): Promise<TriggersRaDashboard> {
-  const resp = await fetch(
-    `${getApiBase()}/triggers-ra/dashboard?period_days=${encodeURIComponent(String(periodDays))}`,
+export async function fetchTriggersRaDashboard(query: TriggersRaPeriodQuery): Promise<TriggersRaDashboard> {
+  const params = new URLSearchParams();
+  if (query.mode === "custom") {
+    params.set("date_from", query.dateFrom);
+    params.set("date_to", query.dateTo);
+  } else {
+    params.set("period_days", String(query.periodDays));
+  }
+  if (query.force) params.set("force", "true");
+
+  const resp = await fetchWithTimeout(
+    `${getApiBase()}/triggers-ra/dashboard?${params.toString()}`,
     { headers: authHeaders() },
+    DASHBOARD_TIMEOUT_MS,
   );
   if (!resp.ok) {
     const text = await resp.text().catch(() => "");
@@ -114,14 +136,18 @@ export async function fetchTriggersRaDashboard(periodDays: number): Promise<Trig
 }
 
 export async function downloadTriggersRaXlsx(data: TriggersRaDashboard): Promise<Blob> {
-  const resp = await fetch(`${getApiBase()}/triggers-ra/export.xlsx`, {
-    method: "POST",
-    headers: {
-      ...authHeaders(),
-      "Content-Type": "application/json",
+  const resp = await fetchWithTimeout(
+    `${getApiBase()}/triggers-ra/export.xlsx`,
+    {
+      method: "POST",
+      headers: {
+        ...authHeaders(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     },
-    body: JSON.stringify(data),
-  });
+    60_000,
+  );
   if (!resp.ok) {
     const text = await resp.text().catch(() => "");
     throw new Error(text.slice(0, 400) || `API ${resp.status}`);
